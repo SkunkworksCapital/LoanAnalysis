@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>In-Browser Data Analysis with TensorFlow.js</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">In-Browser Loan Analysis</h2>
+        
+        <!-- File Upload Section -->
+        <div class="card mt-4">
+            <div class="card-body text-center">
+                <h5>Upload Loan Data CSV</h5>
+                <input type="file" id="dataFile" class="form-control-file" accept=".csv">
+                <button class="btn btn-success mt-3" onclick="processFile()">Upload and Analyze</button>
+            </div>
+        </div>
+        
+        <!-- Canned Questions Section -->
+        <div class="card mt-4">
+            <div class="card-body text-center">
+                <h5>Suggested Questions</h5>
+                <p>Click a question to ask about your data:</p>
+                
+                <!-- Canned Questions as Buttons -->
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the average loan amount?')">What is the average loan amount?</button>
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many high-risk loans are there?')">How many high-risk loans are there?</button>
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many low-risk loans are there?')">How many low-risk loans are there?</button>
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the average credit score?')">What is the average credit score?</button>
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the total loan amount?')">What is the total loan amount?</button>
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the highest loan amount?')">What is the highest loan amount?</button>
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the lowest credit score?')">What is the lowest credit score?</button>
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the total income of all borrowers?')">What is the total income of all borrowers?</button>
+                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many loans have an interest rate above 5%?')">How many loans have an interest rate above 5%?</button>
+            </div>
+        </div>
+
+        <!-- Question Input Section -->
+        <div class="card mt-4">
+            <div class="card-body text-center">
+                <h5>Ask a Question About Your Data</h5>
+                <input type="text" id="questionInput" class="form-control" placeholder="e.g., What’s the average loan amount?">
+                <button class="btn btn-primary mt-2" onclick="answerQuestion()">Ask</button>
+                <div id="questionResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5>Loan Analysis Results</h5>
+                <div id="analysisResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="loanAnalyzer.js"></script>
+</body>
+</html>
