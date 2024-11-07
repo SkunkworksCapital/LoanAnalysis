@@ -5,7 +5,7 @@ function fillQuestion(question) {
 
 let data = []; // Store uploaded data globally for analysis
 
-// Parse and preprocess data
+// Parse and preprocess data, then display a preview
 async function processFile() {
     const fileInput = document.getElementById('dataFile').files[0];
     if (!fileInput) {
@@ -19,13 +19,59 @@ async function processFile() {
         dynamicTyping: true,
         complete: async (result) => {
             data = result.data;
-            document.getElementById('analysisResult').innerText = "Data uploaded. Starting analysis...";
+            displayDataPreview(data); // Show preview of first 5 rows
+            document.getElementById('analysisResult').innerText += "\nData uploaded and ready for analysis.";
             await analyzeData(data);
         }
     });
 }
+// Function to show a temporary notification
+function showTrainingNotification(message) {
+    const notification = document.createElement('div');
+    notification.classList.add('alert', 'alert-success', 'mt-3');
+    notification.innerText = message;
 
-// Analyze data with TensorFlow.js
+    // Append notification to the body or a specific div
+    document.body.appendChild(notification);
+
+    // Remove notification after 2 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 8000);
+}
+// Display the first 5 rows of data as a preview
+function displayDataPreview(data) {
+    const previewData = data.slice(0, 5); // Get the first 5 rows
+    const previewTable = document.createElement('table');
+    previewTable.classList.add('table', 'table-bordered', 'mt-3');
+
+    // Create table header
+    const headerRow = document.createElement('tr');
+    Object.keys(previewData[0]).forEach(key => {
+        const th = document.createElement('th');
+        th.innerText = key;
+        headerRow.appendChild(th);
+    });
+    previewTable.appendChild(headerRow);
+
+    // Create table rows for preview data
+    previewData.forEach(row => {
+        const dataRow = document.createElement('tr');
+        Object.values(row).forEach(value => {
+            const td = document.createElement('td');
+            td.innerText = value;
+            dataRow.appendChild(td);
+        });
+        previewTable.appendChild(dataRow);
+    });
+
+    // Display preview table in the analysisResult div
+    const resultDiv = document.getElementById('analysisResult');
+    resultDiv.innerHTML = "<h5>Data Preview (First 5 Rows):</h5>";
+    resultDiv.appendChild(previewTable);
+}
+
+// Analyze data with an enhanced TensorFlow.js model
 async function analyzeData(data) {
     const features = data.map(item => [
         item.Loan_Amount,
@@ -38,56 +84,78 @@ async function analyzeData(data) {
     const featureTensor = tf.tensor2d(features);
     const labelTensor = tf.tensor2d(labels, [labels.length, 1]);
 
+    // Define a deeper model with dropout layers for regularization
     const model = tf.sequential();
-    model.add(tf.layers.dense({ units: 64, activation: 'relu', inputShape: [4] }));
+    model.add(tf.layers.dense({ units: 128, activation: 'relu', inputShape: [4] }));
+    model.add(tf.layers.dropout({ rate: 0.5 })); // Dropout to prevent overfitting
+    model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
+    model.add(tf.layers.dropout({ rate: 0.5 }));
     model.add(tf.layers.dense({ units: 32, activation: 'relu' }));
-    model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
+    model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' })); // Sigmoid for binary classification
 
+    // Compile the model with an adjusted learning rate
     model.compile({
-        optimizer: 'adam',
+        optimizer: tf.train.adam(0.001), // Lower learning rate for more stable training
         loss: 'binaryCrossentropy',
         metrics: ['accuracy']
     });
 
     await model.fit(featureTensor, labelTensor, { epochs: 50 });
-    document.getElementById('analysisResult').innerText = "Model trained. You can now ask questions about the data.";
-
-    const predictions = model.predict(featureTensor);
-    predictions.array().then(array => {
-        displayResults(array, data);
-    });
+    showTrainingNotification("Model trained. You can now ask questions about the data.");
 }
 
-// Display results
-function displayResults(predictions, data) {
-    const resultDiv = document.getElementById('analysisResult');
-    resultDiv.innerHTML = "<h5>Loan Analysis Results:</h5>";
-    
-    data.forEach((item, index) => {
-        const risk = predictions[index][0] > 0.5 ? "High Risk" : "Low Risk";
-        resultDiv.innerHTML += `Loan ID: ${item.ID} - ${risk}<br>`;
-    });
+// Function to show a temporary notification
+function showTrainingNotification(message) {
+    const notification = document.createElement('div');
+    notification.classList.add('alert', 'alert-success', 'mt-3');
+    notification.innerText = message;
+
+    // Append notification to the body or a specific div
+    document.body.appendChild(notification);
+
+    // Remove notification after 2 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 2000);
 }
 
-// Helper functions for each type of question
+// Enhanced answer function with NLP-based question parsing
+function parseQuestion(question) {
+    question = question.toLowerCase();
+    if (question.includes("average loan amount")) {
+        return calculateAverageLoanAmount();
+    } else if (question.includes("total loan amount")) {
+        return calculateTotalLoanAmount();
+    } else if (question.includes("highest loan amount")) {
+        return calculateHighestLoanAmount();
+    } else if (question.includes("lowest credit score")) {
+        return calculateLowestCreditScore();
+    } else if (question.includes("high-risk loans")) {
+        return calculateHighRiskLoans();
+    } else if (question.includes("low-risk loans")) {
+        return calculateLowRiskLoans();
+    } else if (question.includes("interest rate above")) {
+        const rate = parseFloat(question.match(/(\d+(\.\d+)?)/)[0]);
+        return calculateInterestRateAbove(rate);
+    } else if (question.includes("how many loans") || question.includes("total number of loans")) {
+        return calculateTotalNumberOfLoans();
+    } else if (question.includes("portfolio value")) {
+        return calculatePortfolioValue();
+    }
+    return "I'm sorry, I didn't understand the question. Try asking about 'average loan amount' or 'highest loan amount'.";
+}
+
+// Main function to answer user questions based on the data
+function answerQuestion() {
+    const question = document.getElementById('questionInput').value;
+    const answer = parseQuestion(question);
+    document.getElementById('questionResult').innerText = answer;
+}
+
+// Calculation functions
 function calculateAverageLoanAmount() {
     const avgLoanAmount = data.reduce((sum, item) => sum + item.Loan_Amount, 0) / data.length;
     return `The average loan amount is $${avgLoanAmount.toFixed(2)}.`;
-}
-
-function calculateHighRiskLoans() {
-    const highRiskCount = data.filter(item => item.Risk_Level === 'High').length;
-    return `There are ${highRiskCount} high-risk loans in the dataset.`;
-}
-
-function calculateLowRiskLoans() {
-    const lowRiskCount = data.filter(item => item.Risk_Level === 'Low').length;
-    return `There are ${lowRiskCount} low-risk loans in the dataset.`;
-}
-
-function calculateAverageCreditScore() {
-    const avgCreditScore = data.reduce((sum, item) => sum + item.Credit_Score, 0) / data.length;
-    return `The average credit score is ${avgCreditScore.toFixed(0)}.`;
 }
 
 function calculateTotalLoanAmount() {
@@ -105,47 +173,53 @@ function calculateLowestCreditScore() {
     return `The lowest credit score is ${lowestCreditScore}.`;
 }
 
-function calculateTotalIncome() {
-    const totalIncome = data.reduce((sum, item) => sum + item.Income, 0);
-    return `The total income of all borrowers is $${totalIncome.toFixed(2)}.`;
+function calculateHighRiskLoans() {
+    const highRiskCount = data.filter(item => item.Risk_Level === 'High').length;
+    return `There are ${highRiskCount} high-risk loans in the dataset.`;
 }
 
-function calculateInterestRateAbove5Percent() {
-    const highInterestCount = data.filter(item => item.Interest_Rate > 5).length;
-    return `There are ${highInterestCount} loans with an interest rate above 5%.`;
+function calculateLowRiskLoans() {
+    const lowRiskCount = data.filter(item => item.Risk_Level === 'Low').length;
+    return `There are ${lowRiskCount} low-risk loans in the dataset.`;
 }
 
-// Main function to answer user questions based on the data
-function answerQuestion() {
-    const question = document.getElementById('questionInput').value.toLowerCase();
-    let answer = '';
-
-    // Mapping keywords to functions
-    const questionMap = {
-        "average loan amount": calculateAverageLoanAmount,
-        "high-risk loans": calculateHighRiskLoans,
-        "low-risk loans": calculateLowRiskLoans,
-        "average credit score": calculateAverageCreditScore,
-        "total loan amount": calculateTotalLoanAmount,
-        "highest loan amount": calculateHighestLoanAmount,
-        "lowest credit score": calculateLowestCreditScore,
-        "total income": calculateTotalIncome,
-        "interest rate above 5%": calculateInterestRateAbove5Percent
-    };
-
-    // Find the right function to call based on keywords in the question
-    for (const [key, func] of Object.entries(questionMap)) {
-        if (question.includes(key)) {
-            answer = func();
-            break;
-        }
-    }
-
-    // Default message if no question matches
-    if (!answer) {
-        answer = "I'm sorry, I didn't understand the question. Try asking about 'average loan amount' or 'highest loan amount'.";
-    }
-
-    document.getElementById('questionResult').innerText = answer;
+function calculateInterestRateAbove(threshold) {
+    const count = data.filter(item => item.Interest_Rate > threshold).length;
+    return `There are ${count} loans with an interest rate above ${threshold}%.`;
 }
 
+function calculateTotalNumberOfLoans() {
+    return `There are ${data.length} loans in the portfolio.`;
+}
+
+function calculatePortfolioValue() {
+    const portfolioValue = data.reduce((sum, item) => sum + item.Loan_Amount, 0);
+    return `The total value of the portfolio is $${portfolioValue.toFixed(2)}.`;
+}
+
+// Function to show a temporary notification as a pop-out at the top of the page
+function showTrainingNotification(message) {
+    // Create a notification div
+    const notification = document.createElement('div');
+    notification.classList.add('alert', 'alert-success', 'popout-notification');
+    notification.innerText = message;
+
+    // Add styles to position the notification at the top as a pop-out
+    notification.style.position = 'fixed';
+    notification.style.top = '10px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.zIndex = '1000';
+    notification.style.padding = '15px 30px';
+    notification.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
+    notification.style.borderRadius = '8px';
+    notification.style.fontSize = '16px';
+
+    // Append notification to the body
+    document.body.appendChild(notification);
+
+    // Remove notification after 8 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 8000);
+}

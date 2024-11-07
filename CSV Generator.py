@@ -4,7 +4,7 @@ from faker import Faker
 
 # Initialize Faker and define sample data parameters
 fake = Faker()
-num_samples = 200
+num_samples = 20
 
 # Generate sample data
 data = {
@@ -19,4 +19,4 @@ data = {
 
 # Create DataFrame and save to CSV
 sample_df = pd.DataFrame(data)
-sample_df.to_csv("sample_loan_data.csv", index=False)
+sample_df.to_csv("sample_loan_data20.csv", index=False)

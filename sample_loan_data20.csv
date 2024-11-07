@@ -1,0 +1,21 @@
+ID,Borrower_Name,Loan_Amount,Interest_Rate,Income,Credit_Score,Risk_Level
+1,John White,318106.99,9.0,155428.78,432,Low
+2,Edward Brown,193708.46,8.28,157148.82,379,Low
+3,Sarah Carlson,67726.25,6.28,180122.26,763,High
+4,Daniel Cooley,283941.19,2.75,193578.38,488,High
+5,Linda Silva,290649.93,7.89,168348.21,789,Low
+6,Catherine Ryan,404743.38,3.44,138185.2,608,Low
+7,Andre Garcia,448399.23,2.53,162582.5,638,High
+8,Jennifer Richardson,468295.84,7.92,154748.17,742,High
+9,Peter Jackson,122589.23,8.59,32318.16,443,High
+10,Erika Miller,412808.01,1.77,84039.52,686,Low
+11,Amy Williamson,209628.59,5.29,110710.33,526,High
+12,Christina Reid,377256.56,1.56,123792.77,772,Low
+13,Carl Spears,449542.22,2.59,182445.56,594,Low
+14,David Carter,176016.23,6.13,107780.9,393,High
+15,Eugene Reeves,324107.66,7.74,41518.92,508,High
+16,Cynthia Casey,232439.51,3.48,100944.71,785,Low
+17,Alyssa Hicks,269291.97,7.46,179801.97,373,Low
+18,Benjamin Lynn,163414.69,6.84,156478.9,563,High
+19,Karen Diaz,73549.26,9.45,48511.28,845,Low
+20,Karen Weeks,139347.23,2.46,171539.99,845,High

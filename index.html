@@ -18,24 +18,35 @@
             </div>
         </div>
         
-        <!-- Canned Questions Section -->
+
+        <!-- Results Section -->
         <div class="card mt-4">
-            <div class="card-body text-center">
-                <h5>Suggested Questions</h5>
-                <p>Click a question to ask about your data:</p>
-                
-                <!-- Canned Questions as Buttons -->
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the average loan amount?')">What is the average loan amount?</button>
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many high-risk loans are there?')">How many high-risk loans are there?</button>
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many low-risk loans are there?')">How many low-risk loans are there?</button>
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the average credit score?')">What is the average credit score?</button>
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the total loan amount?')">What is the total loan amount?</button>
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the highest loan amount?')">What is the highest loan amount?</button>
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the lowest credit score?')">What is the lowest credit score?</button>
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the total income of all borrowers?')">What is the total income of all borrowers?</button>
-                <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many loans have an interest rate above 5%?')">How many loans have an interest rate above 5%?</button>
+            <div class="card-body">
+                <h5>Loan Analysis Results</h5>
+                <div id="analysisResult"></div>
             </div>
         </div>
+
+                <!-- Canned Questions Section -->
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <h5>Suggested Questions</h5>
+                        <p>Click a question to ask about your data:</p>
+                        
+                        <!-- Canned Questions as Buttons -->
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the average loan amount?')">What is the average loan amount?</button>
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many high-risk loans are there?')">How many high-risk loans are there?</button>
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many low-risk loans are there?')">How many low-risk loans are there?</button>
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the average credit score?')">What is the average credit score?</button>
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the total loan amount?')">What is the total loan amount?</button>
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the highest loan amount?')">What is the highest loan amount?</button>
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the lowest credit score?')">What is the lowest credit score?</button>
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('What is the total income of all borrowers?')">What is the total income of all borrowers?</button>
+                        <button class="btn btn-outline-primary m-2" onclick="fillQuestion('How many loans have an interest rate above 5%?')">How many loans have an interest rate above 5%?</button>
+                    </div>
+                </div>
+
+
 
         <!-- Question Input Section -->
         <div class="card mt-4">
@@ -47,13 +58,7 @@
             </div>
         </div>
 
-        <!-- Results Section -->
-        <div class="card mt-4">
-            <div class="card-body">
-                <h5>Loan Analysis Results</h5>
-                <div id="analysisResult"></div>
-            </div>
-        </div>
+
     </div>
 
     <!-- Load JavaScript Libraries -->
